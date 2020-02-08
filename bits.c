@@ -1,5 +1,7 @@
 # include <stdio.h>
 
+// 10+1-2
+
 void printfbit(unsigned n);
 int setbits(unsigned x, int p, int n, int y);
 int invert(unsigned x, int p, int n, int y);
@@ -7,9 +9,8 @@ int rightrot(unsigned x, int n);
 
 int main()
 {
-    // printf("%d\n", setbits(12, 3, 1, 4));
-    printfbit(setbits(12, 3, 1, 4));
-    // printfbit(12);
+    // printfbit(setbits(79, 5, 2, 7));
+    printfbit(invert(11, 1, 2, 4));
     return 0;
 }
 
@@ -24,17 +25,12 @@ void printfbit(unsigned n)
 
 int setbits(unsigned x, int p, int n, int y)
   {
-      return -x;
+    return x | (~(~0 << n) & y) << (p+1-n);
   }
 
-int invert(unsigned x, int p, int n, int y)
+int invert(unsigned x, int p, int n)
   {
-      int i;
-      for (i=0; i <= n; ++i)
-      {
-          printfbit(x << i);
-      }
-      return 0;
+      return x;
   }
 
 int rightrot(unsigned x, int n)
