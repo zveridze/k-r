@@ -7,5 +7,6 @@ int main(void)
 {
     int ai=1, bi=2;
     swap(int, ai, bi);
+    printf("%i, %i\n", ai ,bi);
     return 0;
 }
