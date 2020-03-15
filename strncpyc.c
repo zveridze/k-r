@@ -8,7 +8,7 @@ int main()
 {
     char start[] = "aaa";
     char end[] = "aaa";
-    int n = 2;
+    int n = 4;
     printf("%c", strncmp_c(end, start, n));
     return 0;
 }
@@ -36,5 +36,6 @@ int strncmp_c(char *t, char *s, int n)
             return 0;
         }
     }
-    return *(s-1) = *(t-1);
+    return *(s-1) - *(t-1);
+
 }
