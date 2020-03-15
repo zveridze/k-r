@@ -28,7 +28,7 @@ int setbits(unsigned x, int p, int n, int y)
     return x | (~(~0 << n) & y) << (p+1-n);
   }
 
-int invert(unsigned x, int p, int n)
+int invert(unsigned x, int p, int n, int y)
   {
       return x;
   }
