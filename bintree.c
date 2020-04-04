@@ -2,74 +2,89 @@
 # include <ctype.h>
 # include <string.h>
 
-# define MAXWORD 100
+#define MAXWORD 100
 
-struct key {char *word; int count;};
-struct key keytab[] = {
-     "_asm", 0,
-     "as_m", 0,
-     "asm", 0,
-     "break", 0,
-     "case", 0,
-     "char", 0
- };
+struct tnode{
+    char *word;
+    int count;
+    struct tnode *left;
+    struct tnode *rigth;
+};
 
-# define NKEYS (sizeof keytab / sizeof keytab[0])
-
+struct tnode *addtree(struct tnode *, char*);
+void treeprint(struct tnode *);
 int getword(char *, int);
-struct key *binsearch(char *, struct key *, int);
 
 int main()
 {
-    int n;
+    struct tnode *root;
     char word[MAXWORD];
-    struct key *p;
-
-    printf("%lu\n", NKEYS);
-
-    while(getword(word, MAXWORD) != EOF)
+    root = NULL;
+    while (getword(word, MAXWORD) != NULL)
     {
         if (isalpha(word[0]))
         {
-            if ((p = binsearch(word, keytab, NKEYS)) >= NULL)
-            {
-                p->count++;
-            }
+            root = addtree(root, word);
         }
-    }
-    for (p = keytab; p < keytab + NKEYS; p++)
-    {
-        if (p->count > 0)
-        {
-            printf("%d %s\n", p->count, p->word);
-        }
+        treeprint(root);
     }
     return 0;
 }
 
-struct key *binsearch(char *word, struct key *tab, int n)
+struct tnode *talloc(void);
+char *strdups(char *);
+
+struct tnode *addtree(struct tnode *p, char *w)
 {
     int cond;
-    struct key *low = &tab[0];
-    struct key *high = &tab[n];
-    struct key *mid;
-    while(low < high)
+    if (p == NULL)
     {
-        mid = low + (high - low) / 2;
-        if ((cond = strcmp(word, mid->word)) < 0)
-        {
-            high = mid;
-        }
-        else if (cond > 0)
-        {
-            low = mid + 1;
-        }
-        else
-        {
-            return mid;
-        }
+        p = talloc();
+        p->word = strdups(w);
+        p->count = 1;
+        p->left = p->rigth = NULL;
     }
-    return NULL;
+    else if ((cond = strcmp(w, p->word)) == 0)
+    {
+        p->count++;
+    }
+    else if (cond < 0)
+    {
+        p->left = addtree(p->left, w);
+    }
+    else
+    {
+        p->rigth = addtree(p->rigth, w);
+    }
+    return p;
+}
+
+void treeprint(struct tnode *p)
+{
+    if (p != NULL)
+    {
+        treeprint (p->left);
+        printf("%4d   %s\n", p->count, p->word);
+        treeprint (p->rigth);
+    }
+}
+
+#include <stdlib.h>
+
+struct tnode *talloc(void)
+{
+    return (struct tnod *) malloc(sizeof(struct tnode));
+}
+
+char *strdups(char *s)
+{
+    char *p;
+    p = (char *) malloc(strlen(s)+1);
+    if (p != NULL)
+    {
+        strcpy(p, s);
+    }
+    return p;
 }
 
 int getword(char *word, int lim)
@@ -82,7 +97,6 @@ int getword(char *word, int lim)
     if (c != EOF)
     {
         *w++ = c;
-        // printf("%s\n",w);
     }
     if (isalpha(c) || c == '_')
         for (; --lim > 0; w++)
